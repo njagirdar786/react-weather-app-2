@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import { Chart } from "frappe-charts/dist/frappe-charts.min.esm";
 
 function page({ params }) {
   const [dayData, setDayData] = useState(null);
@@ -23,6 +24,40 @@ function page({ params }) {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (dayData) {
+      const hourlyData = dayData.hour;
+      const chartData = {
+        labels: hourlyData.map((hour) => hour.time),
+        datasets: [
+          {
+            name: "°C",
+            type: "line",
+            values: hourlyData.map((hour) => hour.temp_c),
+          },
+        ],
+      };
+
+      const chart = new Chart("#hourly-temperature-chart", {
+        title: "Hourly Temperature in °C",
+        data: chartData,
+        type: "line",
+        height: 250,
+        axisOptions: {
+          xIsSeries: true,
+          xAxisMode: "tick",
+          yAxisMode: "tick",
+        },
+        lineOptions: {
+          hideDots: 0, //default:0
+          heatline: 0,
+          regionFill: 1,
+        },
+        colors: ["#69ff47"],
+      });
+    }
+  }, [dayData]);
 
   return (
     <div>
@@ -123,6 +158,12 @@ function page({ params }) {
               <div className="stat">
                 <div className="stat-title">Moon Phase</div>
                 <div className="stat-value"> {dayData.astro.moon_phase}</div>
+              </div>
+            </div>
+
+            <div className="stats">
+              <div className="stat">
+                <div id="hourly-temperature-chart"></div>
               </div>
             </div>
 
