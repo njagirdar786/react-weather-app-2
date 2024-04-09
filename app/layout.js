@@ -11,7 +11,12 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body>
+        <div className="navbar bg-gradient-to-br from-gray-700 to-gray-900">
+          <h1 className="text-xl ml-4">React Weather App</h1>
+        </div>
+        {children}
+      </body>
     </html>
   );
 }
